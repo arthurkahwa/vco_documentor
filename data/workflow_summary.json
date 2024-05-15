@@ -1,0 +1,125 @@
+{
+    "href": "https://a9121022.edst.ebaintern.de:443/vco/api/workflows/BD808080808080808080808080808080C2C280800122528313869552e41805bb1/",
+    "relations": {
+        "link": [
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/inventory/System/Workflows/Library/vCenter/Virtual%2BMachine%2Bmanagement/Basic/",
+                "rel": "up"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/workflows/BD808080808080808080808080808080C2C280800122528313869552e41805bb1/executions/",
+                "rel": "executions"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/workflows/BD808080808080808080808080808080C2C280800122528313869552e41805bb1/presentation/",
+                "rel": "presentation"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/workflows/BD808080808080808080808080808080C2C280800122528313869552e41805bb1/tasks/",
+                "rel": "tasks"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/workflows/BD808080808080808080808080808080C2C280800122528313869552e41805bb1/icon/",
+                "rel": "icon"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/workflows/BD808080808080808080808080808080C2C280800122528313869552e41805bb1/schema/",
+                "rel": "schema"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/workflows/BD808080808080808080808080808080C2C280800122528313869552e41805bb1/content/",
+                "rel": "content"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/workflows/BD808080808080808080808080808080C2C280800122528313869552e41805bb1/permissions/",
+                "rel": "permissions"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/workflows/BD808080808080808080808080808080C2C280800122528313869552e41805bb1/interactions/",
+                "rel": "interactions"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/workflows/BD808080808080808080808080808080C2C280800122528313869552e41805bb1/validate/",
+                "rel": "validate"
+            }
+        ]
+    },
+    "id": "BD808080808080808080808080808080C2C280800122528313869552e41805bb1",
+    "customized-icon": false,
+    "name": "Set virtual machine performance",
+    "version": "0.3.0",
+    "description": "Changes performance settings such as shares, minimum and maximum values, shaping for network, and disk access of a virtual machine.",
+    "category-id": "8a7480a1735274aa01735275494005cf",
+    "input-parameters": [
+        {
+            "description": "Virtual machine for which to configure performance settings",
+            "type": "VC:VirtualMachine",
+            "name": "vm"
+        },
+        {
+            "description": "Set CPU values",
+            "type": "boolean",
+            "name": "setCPU"
+        },
+        {
+            "description": "Set RAM values",
+            "type": "boolean",
+            "name": "setRAM"
+        },
+        {
+            "description": "Set disk values",
+            "type": "boolean",
+            "name": "setDisk"
+        },
+        {
+            "description": "CPU shares level",
+            "type": "VC:SharesLevel",
+            "name": "cpuSharesLevel"
+        },
+        {
+            "description": "CPU shares (MHz)",
+            "type": "number",
+            "name": "cpuShares"
+        },
+        {
+            "description": "CPU reservation (MHz)",
+            "type": "number",
+            "name": "cpuReservation"
+        },
+        {
+            "description": "CPU limit (MHz)",
+            "type": "number",
+            "name": "cpuLimit"
+        },
+        {
+            "description": "Memory shares level",
+            "type": "VC:SharesLevel",
+            "name": "ramSharesLevel"
+        },
+        {
+            "description": "Memory shares (MB)",
+            "type": "number",
+            "name": "ramShares"
+        },
+        {
+            "description": "Memory reservation (MB)",
+            "type": "number",
+            "name": "ramReservation"
+        },
+        {
+            "description": "Memory limit (MB)",
+            "type": "number",
+            "name": "ramLimit"
+        },
+        {
+            "description": "Disk shares level",
+            "type": "VC:SharesLevel",
+            "name": "diskSharesLevel"
+        },
+        {
+            "description": "Number of disk shares",
+            "type": "number",
+            "name": "diskShares"
+        }
+    ]
+}

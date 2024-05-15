@@ -1,0 +1,42 @@
+{
+    "href": "https://a9121022.edst.ebaintern.de:443/vco/api/actions/d0a5b782-f963-40b6-a5f7-ed852178cdf1/",
+    "relations": {
+        "link": [
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/actions/com.vmware.library.vra.infrastructure.machine/getAllMachinesByPowerState/",
+                "rel": "alternate"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/actions/d0a5b782-f963-40b6-a5f7-ed852178cdf1/permissions/",
+                "rel": "permissions"
+            },
+            {
+                "href": "https://a9121022.edst.ebaintern.de:443/vco/api/actions/d0a5b782-f963-40b6-a5f7-ed852178cdf1/executions/",
+                "rel": "executions"
+            }
+        ]
+    },
+    "id": "d0a5b782-f963-40b6-a5f7-ed852178cdf1",
+    "input-parameters": [
+        {
+            "description": "VMware Aria Automation Host Object",
+            "type": "VRA:Host",
+            "name": "host"
+        },
+        {
+            "description": "Power State e.g. ON, OFF etc.",
+            "type": "string",
+            "name": "state"
+        }
+    ],
+    "output-type": "Array/VRA:Machine",
+    "name": "getAllMachinesByPowerState",
+    "module": "com.vmware.library.vra.infrastructure.machine",
+    "description": "Get All Machines By Power State Filter",
+    "version": "2.0.0",
+    "fqn": "com.vmware.library.vra.infrastructure.machine/getAllMachinesByPowerState",
+    "script": "return VraEntitiesFinder.getMachines(host, \"powerState eq '\" + state + \"'\");",
+    "bundleHasContent": false,
+    "runtimeMemoryLimit": 0,
+    "runtimeTimeout": 0
+}

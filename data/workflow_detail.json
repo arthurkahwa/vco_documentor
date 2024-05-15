@@ -1,0 +1,586 @@
+{
+    "display-name": "Set virtual machine performance",
+    "description": "Changes performance settings such as shares, minimum and maximum values, shaping for network, and disk access of a virtual machine.",
+    "ref-types": "(VC:VirtualMachine)",
+    "position": {
+        "y": 10.0,
+        "x": 100.0
+    },
+    "input": {
+        "param": [
+            {
+                "description": "Virtual machine for which to configure performance settings",
+                "name": "vm",
+                "type": "VC:VirtualMachine"
+            },
+            {
+                "description": "Set CPU values",
+                "name": "setCPU",
+                "type": "boolean"
+            },
+            {
+                "description": "Set RAM values",
+                "name": "setRAM",
+                "type": "boolean"
+            },
+            {
+                "description": "Set disk values",
+                "name": "setDisk",
+                "type": "boolean"
+            },
+            {
+                "description": "CPU shares level",
+                "name": "cpuSharesLevel",
+                "type": "VC:SharesLevel"
+            },
+            {
+                "description": "CPU shares (MHz)",
+                "name": "cpuShares",
+                "type": "number"
+            },
+            {
+                "description": "CPU reservation (MHz)",
+                "name": "cpuReservation",
+                "type": "number"
+            },
+            {
+                "description": "CPU limit (MHz)",
+                "name": "cpuLimit",
+                "type": "number"
+            },
+            {
+                "description": "Memory shares level",
+                "name": "ramSharesLevel",
+                "type": "VC:SharesLevel"
+            },
+            {
+                "description": "Memory shares (MB)",
+                "name": "ramShares",
+                "type": "number"
+            },
+            {
+                "description": "Memory reservation (MB)",
+                "name": "ramReservation",
+                "type": "number"
+            },
+            {
+                "description": "Memory limit (MB)",
+                "name": "ramLimit",
+                "type": "number"
+            },
+            {
+                "description": "Disk shares level",
+                "name": "diskSharesLevel",
+                "type": "VC:SharesLevel"
+            },
+            {
+                "description": "Number of disk shares",
+                "name": "diskShares",
+                "type": "number"
+            }
+        ]
+    },
+    "attrib": [],
+    "workflow-item": [
+        {
+            "display-name": "Set CPU",
+            "script": {
+                "value": "if ( cpuSharesLevel == VcSharesLevel.custom ) {\n\tif ( cpuShares == null || cpuReservation == null || cpuLimit == null) {\n\t\tthrow (\"Error in cpu parameters. At least one parameter was not set\");\n\t}\n}\n\n\n\nSystem.log(\"Set CPU ressources: sharedModel=\" + cpuSharesLevel.name + \", share=\" + cpuShares + \", reservation=\" +  cpuReservation + \", limit=\" + cpuLimit);\nServer.log(\"Set CPU ressources\", \"sharedModel=\" + cpuSharesLevel.name + \", share=\" + cpuShares + \", reservation=\" +  cpuReservation + \", limit=\" + cpuLimit);\n\nvar cpuSharesInfo = System.getModule(\"com.vmware.library.vc.spec\").getSharesInfo(cpuSharesLevel,cpuShares);\nvar cpuResourceAllocationInfo = System.getModule(\"com.vmware.library.vc.spec\").getResourceAllocationInfo(true,cpuLimit,cpuReservation,cpuSharesInfo);\n\t\n\nvar virtualMachineConfigSpec = new VcVirtualMachineConfigSpec();\nvirtualMachineConfigSpec.cpuAllocation = cpuResourceAllocationInfo;\t\t\nvar task = vm.reconfigVM_Task(virtualMachineConfigSpec);\t\nSystem.getModule(\"com.vmware.library.vc.basic\").vim3WaitTaskEnd(task,false,5);",
+                "encoded": false
+            },
+            "in-binding": {
+                "bind": [
+                    {
+                        "name": "vm",
+                        "type": "VC:VirtualMachine",
+                        "export-name": "vm"
+                    },
+                    {
+                        "name": "cpuSharesLevel",
+                        "type": "VC:SharesLevel",
+                        "export-name": "cpuSharesLevel"
+                    },
+                    {
+                        "name": "cpuShares",
+                        "type": "number",
+                        "export-name": "cpuShares"
+                    },
+                    {
+                        "name": "cpuReservation",
+                        "type": "number",
+                        "export-name": "cpuReservation"
+                    },
+                    {
+                        "name": "cpuLimit",
+                        "type": "number",
+                        "export-name": "cpuLimit"
+                    }
+                ]
+            },
+            "out-binding": {},
+            "position": {
+                "y": 80.0,
+                "x": 220.0
+            },
+            "name": "item4",
+            "out-name": "item7",
+            "type": "task",
+            "comparator": 0
+        },
+        {
+            "display-name": "Set RAM",
+            "script": {
+                "value": "if ( ramSharesLevel == VcSharesLevel.custom ) {\n\tif ( ramShares == null || ramReservation == null || ramLimit == null) {\n\t\tthrow (\"Error in RAM parameters. At least one parameter was not set\");\n\t}\n}\n\n\nSystem.log(\"Set RAM ressources: sharedModel=\" + ramSharesLevel.name + \", share=\" + ramShares + \", reservation=\" +  ramReservation + \", limit=\" + ramLimit);\nServer.log(\"Set RAM ressources\", \"sharedModel=\" + ramSharesLevel.name + \", share=\" + ramShares + \", reservation=\" +  ramReservation + \", limit=\" + ramLimit);\n\nvar ramSharesInfo = System.getModule(\"com.vmware.library.vc.spec\").getSharesInfo(ramSharesLevel,ramShares);\nvar ramResourceAllocationInfo = System.getModule(\"com.vmware.library.vc.spec\").getResourceAllocationInfo(true,ramLimit,ramReservation,ramSharesInfo);\n\nvar virtualMachineConfigSpec = new VcVirtualMachineConfigSpec();\nvirtualMachineConfigSpec.memoryAllocation = ramResourceAllocationInfo;\t\t\nvar task = vm.reconfigVM_Task(virtualMachineConfigSpec);\t\n\nSystem.getModule(\"com.vmware.library.vc.basic\").vim3WaitTaskEnd(task,false,5);",
+                "encoded": false
+            },
+            "in-binding": {
+                "bind": [
+                    {
+                        "name": "vm",
+                        "type": "VC:VirtualMachine",
+                        "export-name": "vm"
+                    },
+                    {
+                        "name": "ramSharesLevel",
+                        "type": "VC:SharesLevel",
+                        "export-name": "ramSharesLevel"
+                    },
+                    {
+                        "name": "ramShares",
+                        "type": "number",
+                        "export-name": "ramShares"
+                    },
+                    {
+                        "name": "ramReservation",
+                        "type": "number",
+                        "export-name": "ramReservation"
+                    },
+                    {
+                        "name": "ramLimit",
+                        "type": "number",
+                        "export-name": "ramLimit"
+                    }
+                ]
+            },
+            "out-binding": {},
+            "position": {
+                "y": 153.33333333333334,
+                "x": 225.0
+            },
+            "name": "item5",
+            "out-name": "item0",
+            "type": "task",
+            "comparator": 0
+        },
+        {
+            "display-name": "CPU?",
+            "script": {
+                "value": "//Generated by the system, cannot be edited\nreturn (setCPU == true) ;",
+                "encoded": false
+            },
+            "in-binding": {
+                "bind": [
+                    {
+                        "name": "setCPU",
+                        "type": "boolean",
+                        "export-name": "setCPU"
+                    }
+                ]
+            },
+            "condition": [
+                {
+                    "value": "false",
+                    "name": "setCPU",
+                    "type": "boolean",
+                    "comparator": "0",
+                    "label": "null"
+                }
+            ],
+            "position": {
+                "y": 70.0,
+                "x": 60.0
+            },
+            "name": "item6",
+            "out-name": "item4",
+            "alt-out-name": "item7",
+            "type": "condition",
+            "comparator": 0
+        },
+        {
+            "display-name": "RAM?",
+            "script": {
+                "value": "//Generated by the system, cannot be edited\nreturn (setRAM == true) ;",
+                "encoded": false
+            },
+            "in-binding": {
+                "bind": [
+                    {
+                        "name": "setRAM",
+                        "type": "boolean",
+                        "export-name": "setRAM"
+                    }
+                ]
+            },
+            "condition": [
+                {
+                    "value": "false",
+                    "name": "setRAM",
+                    "type": "boolean",
+                    "comparator": "0",
+                    "label": "null"
+                }
+            ],
+            "position": {
+                "y": 143.33333333333334,
+                "x": 65.0
+            },
+            "name": "item7",
+            "out-name": "item5",
+            "alt-out-name": "item0",
+            "type": "condition",
+            "comparator": 0
+        },
+        {
+            "display-name": "Disk?",
+            "script": {
+                "value": "//Generated by the system, cannot be edited\nreturn (setDisk == true) ;",
+                "encoded": false
+            },
+            "in-binding": {
+                "bind": [
+                    {
+                        "name": "setDisk",
+                        "type": "boolean",
+                        "export-name": "setDisk"
+                    }
+                ]
+            },
+            "condition": [
+                {
+                    "value": "false",
+                    "name": "setDisk",
+                    "type": "boolean",
+                    "comparator": "0",
+                    "label": "null"
+                }
+            ],
+            "position": {
+                "y": 209.5,
+                "x": 65.0
+            },
+            "name": "item0",
+            "out-name": "item1",
+            "alt-out-name": "item13",
+            "type": "condition",
+            "comparator": 0
+        },
+        {
+            "display-name": "Set Disk",
+            "script": {
+                "value": "if ( diskSharesLevel == VcSharesLevel.custom ) {\n\tif ( diskShares == null ) {\n\t\tthrow (\"Error in disk parameters. At least one parameter was not set\");\n\t}\n}\n\nSystem.log(\"Set Disk ressources: sharedModel=\" + diskSharesLevel.name + \", share=\" + diskShares);\nServer.log(\"Set Disk ressources\", \"sharedModel=\" + diskSharesLevel.name + \", share=\" + diskShares);\n\nvar sharesInfo = System.getModule(\"com.vmware.library.vc.spec\").getSharesInfo(diskSharesLevel,diskShares);\n\nvar virtualMachineConfigSpec = new VcVirtualMachineConfigSpec();\nvar deviceConfigSpecs = new Array();\n\nvar devices = vm.config.hardware.device;\nvar nbVirtualDisks = 0;\nif ( devices != null )  {\n\tfor ( var i in devices )  {\n\t\tif (devices[i] instanceof VcVirtualDisk) {\n\t\t\tSystem.log(\"VirtualDisk found (Key: \" + devices[i].key + \")\" );\t\t\t\n\t\t\tvar virtualDisk = devices[i]; \n\t\t\t\n\t\t\tvirtualDisk.shares = sharesInfo;\n\t\t\t\n\t\t\tdeviceConfigSpec = new VcVirtualDeviceConfigSpec();\n\t\t\tdeviceConfigSpec.device = virtualDisk;\n\t\t\tdeviceConfigSpec.operation = VcVirtualDeviceConfigSpecOperation.edit;\n\t\t\tdeviceConfigSpecs[nbVirtualDisks++] = deviceConfigSpec;\t\t\t\t\t\t\t\t\t\t\t\n\t\t}\n\t}\n}\t\n\nvar virtualMachineConfigSpec = new VcVirtualMachineConfigSpec();\nSystem.log(deviceConfigSpecs + \", size=\" + deviceConfigSpecs.length);\nvirtualMachineConfigSpec.deviceChange = deviceConfigSpecs;\t\t\nvar task = vm.reconfigVM_Task(virtualMachineConfigSpec);\nSystem.getModule(\"com.vmware.library.vc.basic\").vim3WaitTaskEnd(task,false,5);",
+                "encoded": false
+            },
+            "in-binding": {
+                "bind": [
+                    {
+                        "name": "vm",
+                        "type": "VC:VirtualMachine",
+                        "export-name": "vm"
+                    },
+                    {
+                        "name": "diskSharesLevel",
+                        "type": "VC:SharesLevel",
+                        "export-name": "diskSharesLevel"
+                    },
+                    {
+                        "name": "diskShares",
+                        "type": "number",
+                        "export-name": "diskShares"
+                    }
+                ]
+            },
+            "out-binding": {},
+            "position": {
+                "y": 219.5,
+                "x": 225.0
+            },
+            "name": "item1",
+            "out-name": "item13",
+            "type": "task",
+            "comparator": 0
+        },
+        {
+            "position": {
+                "y": 276.1666666666667,
+                "x": 105.0
+            },
+            "name": "item13",
+            "type": "end",
+            "end-mode": "0",
+            "comparator": 0
+        }
+    ],
+    "presentation": {
+        "desc": "Set VM performance values",
+        "p-step": [
+            {
+                "title": "VM",
+                "p-group": [
+                    {
+                        "title": "Virtual Machine",
+                        "desc": "The VM to change",
+                        "p-param": [
+                            {
+                                "desc": "Virtual machine for which to configure settings",
+                                "p-qual": [
+                                    {
+                                        "value": "true",
+                                        "name": "mandatory"
+                                    },
+                                    {
+                                        "value": "",
+                                        "name": "contextualParameter"
+                                    },
+                                    {
+                                        "value": "list",
+                                        "kind": "static",
+                                        "name": "show-select-as",
+                                        "type": "string"
+                                    }
+                                ],
+                                "name": "vm"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Controls",
+                        "desc": "Select the entries to change",
+                        "p-param": [
+                            {
+                                "desc": "Set CPU values",
+                                "name": "setCPU"
+                            },
+                            {
+                                "desc": "Set RAM values",
+                                "name": "setRAM"
+                            },
+                            {
+                                "desc": "Set disk values",
+                                "name": "setDisk"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Ressources",
+                "p-group": [
+                    {
+                        "title": "CPU",
+                        "desc": "CPU ressources to change\n\n- 'CPU shares' is ignored if 'CPU shares level' is different than 'custom' \n- if 'CPU limit' equals -1 then CPU is unlimited",
+                        "p-param": [
+                            {
+                                "desc": "CPU shares level",
+                                "p-qual": [
+                                    {
+                                        "value": "S|VMware3:SharesLevel|dunes://service.dunes.ch/CustomSDKObject?id='2'&dunesName='VMware3:SharesLevel'",
+                                        "name": "defaultValue"
+                                    },
+                                    {
+                                        "value": "true",
+                                        "kind": "static",
+                                        "name": "mandatory",
+                                        "type": "boolean"
+                                    }
+                                ],
+                                "name": "cpuSharesLevel"
+                            },
+                            {
+                                "desc": "CPU shares (MHz)",
+                                "p-qual": [
+                                    {
+                                        "value": "0.0",
+                                        "name": "minNumberValue"
+                                    },
+                                    {
+                                        "value": "#",
+                                        "name": "numberFormat"
+                                    }
+                                ],
+                                "name": "cpuShares"
+                            },
+                            {
+                                "desc": "CPU reservation (MHz)",
+                                "p-qual": [
+                                    {
+                                        "value": "0.0",
+                                        "name": "minNumberValue"
+                                    },
+                                    {
+                                        "value": "#",
+                                        "name": "numberFormat"
+                                    }
+                                ],
+                                "name": "cpuReservation"
+                            },
+                            {
+                                "desc": "CPU limit (MHz)",
+                                "p-qual": [
+                                    {
+                                        "value": "#",
+                                        "name": "numberFormat"
+                                    },
+                                    {
+                                        "value": "-1.0",
+                                        "name": "minNumberValue"
+                                    },
+                                    {
+                                        "value": "S|number|-1.0",
+                                        "name": "defaultValue"
+                                    }
+                                ],
+                                "name": "cpuLimit"
+                            }
+                        ],
+                        "p-qual": [
+                            {
+                                "value": "setCPU/setCPU",
+                                "name": "visible"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Memory",
+                        "desc": "RAM ressources to change\n\n- 'Memory shares' is ignored if 'Memory shares level' is different than 'custom' \n- if 'Memory limit' equals -1 then Memory is unlimited",
+                        "p-param": [
+                            {
+                                "desc": "Memory shares level",
+                                "p-qual": [
+                                    {
+                                        "value": "S|VMware3:SharesLevel|dunes://service.dunes.ch/CustomSDKObject?id='2'&dunesName='VMware3:SharesLevel'",
+                                        "name": "defaultValue"
+                                    },
+                                    {
+                                        "value": "true",
+                                        "kind": "static",
+                                        "name": "mandatory",
+                                        "type": "boolean"
+                                    }
+                                ],
+                                "name": "ramSharesLevel"
+                            },
+                            {
+                                "desc": "Memory shares (MB)",
+                                "p-qual": [
+                                    {
+                                        "value": "#",
+                                        "name": "numberFormat"
+                                    },
+                                    {
+                                        "value": "0.0",
+                                        "name": "minNumberValue"
+                                    }
+                                ],
+                                "name": "ramShares"
+                            },
+                            {
+                                "desc": "Memory reservation (MB)",
+                                "p-qual": [
+                                    {
+                                        "value": "0.0",
+                                        "name": "minNumberValue"
+                                    },
+                                    {
+                                        "value": "#",
+                                        "name": "numberFormat"
+                                    }
+                                ],
+                                "name": "ramReservation"
+                            },
+                            {
+                                "desc": "Memory limit (MB)",
+                               "p-qual": [
+                                    {
+                                        "value": "#",
+                                        "kind": "static",
+                                        "name": "numberFormat",
+                                        "type": "String"
+                                    },
+                                    {
+                                        "value": "-1.0",
+                                        "kind": "static",
+                                        "name": "minNumberValue",
+                                        "type": "Number"
+                                    },
+                                    {
+                                        "value": "-1.0",
+                                        "kind": "static",
+                                        "name": "defaultValue",
+                                        "type": "number"
+                                    }
+                                ],
+                                "name": "ramLimit"
+                            }
+                        ],
+                        "p-qual": [
+                            {
+                                "value": "setRAM/setRAM",
+                                "name": "visible"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Disk",
+                        "desc": "This will apply the given shares to ALL the VM disks.",
+                        "p-param": [
+                            {
+                                "desc": "Disk shares level",
+                                "p-qual": [
+                                    {
+                                        "value": "S|VMware3:SharesLevel|dunes://service.dunes.ch/CustomSDKObject?id='2'&dunesName='VMware3:SharesLevel'",
+                                        "name": "defaultValue"
+                                    },
+                                    {
+                                        "value": "true",
+                                        "kind": "static",
+                                        "name": "mandatory",
+                                        "type": "boolean"
+                                    }
+                                ],
+                                "name": "diskSharesLevel"
+                            },
+                            {
+                                "desc": "Number of disk shares",
+                                "p-qual": [
+                                    {
+                                        "value": "#",
+                                        "name": "numberFormat"
+                                    },
+                                   {
+                                        "value": "0.0",
+                                        "name": "minNumberValue"
+                                    }
+                                ],
+                                "name": "diskShares"
+                            }
+                        ],
+                        "p-qual": [
+                            {
+                                "value": "setDisk/setDisk",
+                                "name": "visible"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "root-name": "item6",
+    "object-name": "Workflow:name=generic",
+    "id": "BD808080808080808080808080808080C2C280800122528313869552e41805bb1",
+    "version": "0.3.0",
+    "api-version": "6.0.0",
+    "allowed-operations": "vf",
+    "restartMode": 1,
+    "resumeFromFailedMode": 0
+}
